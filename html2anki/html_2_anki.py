@@ -769,9 +769,9 @@ class UI(QMainWindow):
                   
     def make_cards(self, terms):
         
-        title = self.DECK_FIELD.text()
-        img_side = self.I_BUTTON.checkedButton().text()
-        tags = re.split(' |, ', self.TAGS_FIELD.text())
+        title      = self.DECK_FIELD.text()
+        img_side   = self.I_BUTTON.checkedButton().text()
+        tags       = re.split(' |, ', self.TAGS_FIELD.text())
         model_name = 'HTML 2 ANKI'
         
         #log.info(terms)
