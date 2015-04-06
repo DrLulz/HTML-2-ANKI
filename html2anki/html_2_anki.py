@@ -348,8 +348,8 @@ class UI(QMainWindow):
 
         # DL CHECKBOX
         self.DL_BUTTON = QButtonGroup()
-        self.DL_YES  = QCheckBox('Download Media', self)
-        self.DL_NO   = QCheckBox('Load Web Media', self)
+        self.DL_YES    = QCheckBox('Download Media', self)
+        self.DL_NO     = QCheckBox('Load Web Media', self)
         self.DL_NO.setChecked(True)
         self.DL_BUTTON.addButton(self.DL_YES)
         self.DL_BUTTON.addButton(self.DL_NO)
@@ -609,7 +609,7 @@ class UI(QMainWindow):
         ins_sele_box.setLayout(ins_sele_layout)
         
         # LABEL
-        self.INS_SELE = QLabel('The default setting are for Quizlet, so that will work straight out of the box. The HTML preview on the first tab is fairly explanatory, but for a thorough explanation please see the <a href="http://www.crummy.com/software/BeautifulSoup/bs3/documentation.html">BeautifulSoup documentation</a>. Note: For whatever reason Anki uses version 3. The fields with "all" will look in every element for the associated class or id, but you can change this as you please.')
+        self.INS_SELE = QLabel('The default settings are for Quizlet, so that will work straight out of the box. The HTML preview on the first tab is fairly explanatory, but for a thorough explanation please see the <a href="http://www.crummy.com/software/BeautifulSoup/bs3/documentation.html">BeautifulSoup documentation</a>. Note: For whatever reason Anki uses version 3. The fields with "all" will look in every element for the associated class or id, but you can change this as you please.')
         self.INS_SELE.setAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
         self.INS_SELE.setWordWrap(True)
         self.INS_SELE.setOpenExternalLinks(True)
