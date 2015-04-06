@@ -120,6 +120,8 @@ class UI(QMainWindow):
         # LABEL
         self.FEEDBACK = QLabel('Fill in the fields and press RUN')
         self.FEEDBACK.setAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+        self.FEEDBACK.setWordWrap(True)
+        self.FEEDBACK.setTextFormat(Qt.PlainText)
         self.FEEDBACK.setStyleSheet('''font-family: "Courier New", Courier, monospace;
                                       font-weight: bold;
                                       color: #CC6666;
@@ -347,13 +349,13 @@ class UI(QMainWindow):
         self.I_BUTTON.addButton(self.I_BACK)
 
         # DL CHECKBOX
-        self.DL_BUTTON  = QButtonGroup()
+        #self.DL_BUTTON  = QButtonGroup()
         self.IMG_ON_OFF = QCheckBox('Images ON/OFF', self)
         self.DL_YES     = QCheckBox('Download Media', self)
         self.IMG_ON_OFF.setChecked(False)
         self.DL_YES.setChecked(False)
-        self.DL_BUTTON.addButton(self.IMG_ON_OFF)
-        self.DL_BUTTON.addButton(self.DL_YES)
+        #self.DL_BUTTON.addButton(self.IMG_ON_OFF)
+        #self.DL_BUTTON.addButton(self.DL_YES)
 
         # ATTR VALUE
         self.I_FIELD  = QLineEdit('data-srcset', self)
@@ -852,8 +854,13 @@ class UI(QMainWindow):
             response = urllib2.urlopen(req)
             html     = response.read()
         else:
-            loc_html = open(self.url, 'r')
-            html     = loc_html.read()
+            try:
+                loc_html = open(self.url, 'r')
+                html     = loc_html.read()
+            except IOError:
+                self.FEEDBACK.setText('Invalid URL: '+self.url)
+                return
+                
             
         
         # MAP 'all' --> 'True' TO GET ALL ELEMENTS
@@ -877,6 +884,12 @@ class UI(QMainWindow):
         # MAKE SOUP & SELECT PARENT ELEMENTS FOR Q/A
         soup    = bs(html)
         qas     = soup.findAll(s_elem, { s_attr : re.compile(r'\b%s\b' % s_value) })
+        
+        if qas:
+            pass
+        else:
+            self.FEEDBACK.setText('Select is empty: check element, class or value')
+            return
         
         try:
             title = soup.find('title').text
@@ -923,6 +936,9 @@ class UI(QMainWindow):
                     image = qa.find('img')[self.I_FIELD.text()]
                 except (TypeError, AttributeError):
                     pass
+                except KeyError:
+                    self.FEEDBACK.setText('Not Found: <img '+self.I_FIELD.text()+'="" />')
+                    return
                 if image is not None:
                     # DOWNLOAD YES/NO
                     if not self.DL_YES.isChecked():
@@ -930,18 +946,26 @@ class UI(QMainWindow):
                     else:
                         data['image'] = self.get_img(image)
                 
-
+                
             # FILTER EMPTY CARDS & ADD TO RESULTS
             if bool([i for i in data.values() if i != None]):
                 self.results.append(data)
-                            
+
+        #log.info(self.results)
+        if (self.IMG_ON_OFF.isChecked()) and (all(d.get('image', None) == None for d in self.results)):
+            self.FEEDBACK.setText('Not Found: <img '+self.I_FIELD.text()+'="" />')
+            return
+            
+        if all((d.get('question', None) == None and d.get('answer', None) == None)for d in self.results):
+            self.FEEDBACK.setText('Both Question and Answer Fields are Empty')
+            return
         
         self.make_cards(self.results)
 
         h = HTMLParser()
         feedback = h.unescape(title)
         self.FEEDBACK.setText(feedback)
-        #log.info(feedback)
+        
 
         
         
