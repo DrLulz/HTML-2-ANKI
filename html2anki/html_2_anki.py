@@ -297,13 +297,13 @@ class UI(QMainWindow):
         # ELEM        
         self.A_FIELD_ELEM  = QLineEdit('all', self)
         self.A_FIELD_ELEM.setAlignment(Qt.AlignHCenter)
-        self.A_FIELD_ELEM.setToolTip('<p><code>div<br />span</code></p>')
+        self.A_FIELD_ELEM.setToolTip('<h5>Element:</h5><p><code>div<br />span</code></p>')
         self.A_FIELD_ELEM.textChanged.connect(self.preview_html)
         
         # ATTR        
         self.A_FIELD_ATTR  = QLineEdit('class', self)
         self.A_FIELD_ATTR.setAlignment(Qt.AlignHCenter)
-        self.A_FIELD_ATTR.setToolTip('<p><code>id<br />class</code></p>') 
+        self.A_FIELD_ATTR.setToolTip('<h5>Attribute:</h5><p><code>id<br />class</code></p>') 
         self.A_FIELD_ATTR.textChanged.connect(self.preview_html)       
         
         # ATTR VALUE        
