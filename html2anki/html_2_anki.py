@@ -8,6 +8,8 @@ import re
 #import logging as log
 from BeautifulSoup import BeautifulSoup as bs
 from HTMLParser import HTMLParser
+from google import search as s
+from time import sleep
 
 # ANKI
 from aqt import mw
@@ -850,9 +852,20 @@ class UI(QMainWindow):
         
         # DETERMINE HTML SOURCE
         if re.match('^http', self.url):
-            req      = urllib2.Request(self.url)
-            response = urllib2.urlopen(req)
-            html     = response.read()
+            if re.search('flashcard', self.url):
+                self.FEEDBACK.setText('This may take a few seconds for studyblue.com')
+                number = self.url.split('/')[-1]
+                search = 'site:studyblue.com */' + number
+                for sb_url in s(search, num=1, start=0, stop=1):
+                    http     = str(sb_url)
+                    sleep(8)
+                    req      = urllib2.Request(http)
+                    response = urllib2.urlopen(req)
+                    html     = response.read()
+            else:
+                req      = urllib2.Request(self.url)
+                response = urllib2.urlopen(req)
+                html     = response.read()
         else:
             try:
                 loc_html = open(self.url, 'r')
@@ -861,7 +874,6 @@ class UI(QMainWindow):
                 self.FEEDBACK.setText('Invalid URL: '+self.url)
                 return
                 
-            
         
         # MAP 'all' --> 'True' TO GET ALL ELEMENTS
         # The word 'all' is more intuitive to end users
