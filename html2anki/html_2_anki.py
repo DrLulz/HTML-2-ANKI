@@ -347,12 +347,13 @@ class UI(QMainWindow):
         self.I_BUTTON.addButton(self.I_BACK)
 
         # DL CHECKBOX
-        self.DL_BUTTON = QButtonGroup()
-        self.DL_YES    = QCheckBox('Download Media', self)
-        self.DL_NO     = QCheckBox('Load Web Media', self)
-        self.DL_NO.setChecked(True)
+        self.DL_BUTTON  = QButtonGroup()
+        self.IMG_ON_OFF = QCheckBox('Images ON/OFF', self)
+        self.DL_YES     = QCheckBox('Download Media', self)
+        self.IMG_ON_OFF.setChecked(False)
+        self.DL_YES.setChecked(False)
+        self.DL_BUTTON.addButton(self.IMG_ON_OFF)
         self.DL_BUTTON.addButton(self.DL_YES)
-        self.DL_BUTTON.addButton(self.DL_NO)
 
         # ATTR VALUE
         self.I_FIELD  = QLineEdit('data-srcset', self)
@@ -366,8 +367,8 @@ class UI(QMainWindow):
         image_fb_layout.addWidget(self.I_BACK)
 
         # ADD DL CHECKBOX TO (MIDDLE) CHILD LAYOUT
+        image_dl_layout.addWidget(self.IMG_ON_OFF)
         image_dl_layout.addWidget(self.DL_YES)
-        image_dl_layout.addWidget(self.DL_NO)
 
         # ADD ATTR VALUE TO (RIGHT) CHILD LAYOUT
         image_attr_layout.addWidget(self.I_FIELD)
@@ -916,17 +917,18 @@ class UI(QMainWindow):
                 data['answer'] = answer
                 
 
-            # GET IMAGE
-            try:
-                image = qa.find('img')[self.I_FIELD.text()]
-            except (TypeError, AttributeError):
-                pass
-            if image is not None:
-                # DOWNLOAD YES/NO
-                if self.DL_NO.isChecked():
-                    data['image'] = image                    
-                else:
-                    data['image'] = self.get_img(image)
+            # GET IMAGE IF USER CHECKED BOX
+            if self.IMG_ON_OFF.isChecked():
+                try:
+                    image = qa.find('img')[self.I_FIELD.text()]
+                except (TypeError, AttributeError):
+                    pass
+                if image is not None:
+                    # DOWNLOAD YES/NO
+                    if not self.DL_YES.isChecked():
+                        data['image'] = image                    
+                    else:
+                        data['image'] = self.get_img(image)
                 
 
             # FILTER EMPTY CARDS & ADD TO RESULTS

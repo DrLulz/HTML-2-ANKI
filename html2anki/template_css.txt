@@ -48,6 +48,10 @@ ol {
 	background-color: #202020;
 	}
 
+font {
+	color: #d4cfc9;
+}
+
 .cloze {
 	font-weight: bold;
 	color: #CC6666;
