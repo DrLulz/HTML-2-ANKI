@@ -5,7 +5,7 @@ import sys
 import urllib
 import urllib2
 import re
-import logging as log
+#import logging as log
 from BeautifulSoup import BeautifulSoup as bs
 from HTMLParser import HTMLParser
 
@@ -20,7 +20,7 @@ from PyQt4.QtGui import QFileDialog
 #from PyQt4.QtCore import *
 from PyQt4.QtCore import Qt
 
-log.basicConfig(filename=os.path.expanduser('~/Desktop/log'), level=log.INFO)
+#log.basicConfig(filename=os.path.expanduser('~/Desktop/log'), level=log.INFO)
 
 
 def dark_theme(name, col):
