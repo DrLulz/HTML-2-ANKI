@@ -700,7 +700,7 @@ class UI(QMainWindow):
         tab_widget.addTab(settings_widget,'Settings')     
         tab_widget.addTab(instructions_widget,'Instructions')
         
-        #PyQt4.QtGui.QDesktopServices.openUrl(PyQt4.QtCore.QUrl('file:///%s' % dirname))
+        
         ###############################################
         #               STYLE & SHOW
         ###############################################
@@ -719,6 +719,7 @@ class UI(QMainWindow):
         self.show()
         
         #showInfo(self.THEME)
+        #QDesktopServices.openUrl(QUrl('file:///%s' % dirname))
         
 
 
@@ -732,6 +733,7 @@ class UI(QMainWindow):
         clipboard = QApplication.clipboard()
         clipboard.setText('http://quizlet.com/2621787/histology-lab-photo-quiz-flash-cards/')
         self.HTML_FIELD.setText('http://quizlet.com/2621787/histology-lab-photo-quiz-flash-cards/')
+
 
 
     def preview_html(self):
@@ -760,7 +762,6 @@ class UI(QMainWindow):
  
     def center_ui(self):
         resolution = QDesktopWidget().screenGeometry()
-        #self.move((resolution.width() / 2), (resolution.height() / 2))
         self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
                   (resolution.height() / 20) - (self.frameSize().height() / 20))
                   
