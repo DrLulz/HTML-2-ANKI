@@ -118,7 +118,7 @@ class UI(QMainWindow):
         feedback_box.setLayout(feedback_layout)
 
         # LABEL
-        self.FEEDBACK = QLabel('Fill in fields and press return')
+        self.FEEDBACK = QLabel('Fill in the fields and press RUN')
         self.FEEDBACK.setAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
         self.FEEDBACK.setStyleSheet('''font-family: "Courier New", Courier, monospace;
                                       font-weight: bold;
