@@ -678,7 +678,7 @@ class UI(QMainWindow):
         ins_issues_box.setLayout(ins_issues_layout)
         
         # LABEL
-        self.INS_HELP = QLabel('If you run into any issues please post them at the GitHub repository.')
+        self.INS_HELP = QLabel('If you run into any issues please post them at the <a href="https://github.com/DrLulz/HTML-2-ANKI">GitHub repository</a>.')
         self.INS_HELP.setAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
         self.INS_HELP.setWordWrap(True)
         self.INS_HELP.setOpenExternalLinks(True)
