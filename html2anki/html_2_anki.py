@@ -4,12 +4,11 @@ import os
 import sys
 import urllib
 import urllib2
+import json
 import re
 #import logging as log
 from BeautifulSoup import BeautifulSoup as bs
 from HTMLParser import HTMLParser
-from google import search as s
-from time import sleep
 
 # ANKI
 from aqt import mw
@@ -811,9 +810,9 @@ class UI(QMainWindow):
         for term in terms:            
             card = mw.col.newNote()
             if not term['question'] is None:
-                card['Front'] = u''.join(unicode(i) for i in term['question'])
+                card['Front']   = u''.join(unicode(i) for i in term['question'])
             if not term['answer'] is None:
-                card['Back']  = u''.join(unicode(i) for i in term['answer'])
+                card['Back']    = u''.join(unicode(i) for i in term['answer'])
             if not term['image'] is None:
                 card[img_side] += u'<img src="%s">' % term['image']
                 mw.app.processEvents()
@@ -852,16 +851,11 @@ class UI(QMainWindow):
         
         # DETERMINE HTML SOURCE
         if re.match('^http', self.url):
-            if re.search('flashcard', self.url):
-                self.FEEDBACK.setText('This may take a few seconds for studyblue.com')
-                number = self.url.split('/')[-1]
-                search = 'site:studyblue.com */' + number
-                for sb_url in s(search, num=1, start=0, stop=1):
-                    http     = str(sb_url)
-                    sleep(8)
-                    req      = urllib2.Request(http)
-                    response = urllib2.urlopen(req)
-                    html     = response.read()
+            if re.search('studyblue.com/#flashcard', self.url):
+                corrected_url = self.studyblue_url(self.url)
+                req           = urllib2.Request(corrected_url)
+                response      = urllib2.urlopen(req)
+                html          = response.read()
             else:
                 req      = urllib2.Request(self.url)
                 response = urllib2.urlopen(req)
@@ -941,6 +935,24 @@ class UI(QMainWindow):
             if answer is not None:
                 data['answer'] = answer
                 
+            
+            ## TO DO Check if Q or A contains an img and dl if user selects
+            ## With "Download Media" UNchecked img's are dl if inside the Q or A elements (but not if outside)
+            ## eg ui works as expeceted for Quizlet, but not for StudyBlue
+            
+#            r_url   = re.compile(r"^https?:")
+#            r_image = re.compile(r".(jpg|jpeg|png)$")
+
+#            for d in d_dict:
+#                type = d.get('type')
+
+#                if r_url.match(type):
+#                    log.debug("type is url")
+#                elif r_image.match(type):
+#                    log.debug("type is image")
+#                else:
+#                    log.debug("invalid type")
+               
 
             # GET IMAGE IF USER CHECKED BOX
             if self.IMG_ON_OFF.isChecked():
@@ -963,7 +975,10 @@ class UI(QMainWindow):
             if bool([i for i in data.values() if i != None]):
                 self.results.append(data)
 
+
         #log.info(self.results)
+        
+        
         if (self.IMG_ON_OFF.isChecked()) and (all(d.get('image', None) == None for d in self.results)):
             self.FEEDBACK.setText('Not Found: <img '+self.I_FIELD.text()+'="" />')
             return
@@ -979,8 +994,19 @@ class UI(QMainWindow):
         self.FEEDBACK.setText(feedback)
         
 
+
+    def studyblue_url(self, url):
+        number   = '*/' + url.split('/')[-1]
+        cx       = '000268053989630812228:mkbuy-gokow'
+        key      = 'AIzaSyCeiSrgaemulZRNIQ7LMtOQENohhSiZGRE'
+        search   = 'https://www.googleapis.com/customsearch/v1?key='+key+'&cx='+cx+'&q='+number
+        response = urllib2.urlopen(search)
+        data     = json.load(response)
+        
+        return data["items"][0]["link"]
         
         
+
     def local_file(self):
         # LOAD LOCAL HTML FILE PATH
         path = QFileDialog.getOpenFileName(self, 'Select HTML File', os.getcwd()) #(self, 'Select HTML File', '/home')
